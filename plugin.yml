@@ -1,0 +1,45 @@
+name: RoleplayCore
+main: plugins.astro.roleplaycore.RoleplayCore
+author: Astro
+version: 1.0
+depend: [Vault]
+api-version: 1.13
+commands:
+  bird:
+    description: Sends a bird to another player.
+    usage: /bird <player> <message>
+  card:
+    description: Displays your card or allows you to edit yours.
+    usage: /card help
+  roll:
+    description: Lets you roll a dice.
+    usage: /roll <max>
+  countdown:
+    description: Lets you start a countdown!
+    usage: /countdown <num>
+  join:
+    description: Lets you join a chat channel.
+    usage: /join <channel>
+  leave:
+    description: Lets you leave a chat channel.
+    usage: /leave <channel>
+  channels:
+    description: Lists off chat channels.
+    usage: /channels
+  races:
+    description: Lists off races.
+    usage: /races
+  emote:
+    description: Opens up the emotes menu.
+    usage: /emote
+  channel:
+    description: Channel management.
+    usage: /channel <command> <player> <channel>
+  character:
+    aliases: [characters]
+    description: Character management.
+    usage: /character slot <slotnum>
+  roleplaycore:
+    description: Admin command
+    aliases: [rpcore]
+    usage: /rpcore reload

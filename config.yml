@@ -1,0 +1,59 @@
+channels:
+  ooc:
+    auto-join: true
+    leave-perm: "ooc.leave"
+    join-perm: "ooc.join"
+    view-perm: "ooc.view"
+    talk-perm: "ooc.talk"
+    nickname: "OOC"
+    aliases: []
+    channel-prefix: "&8[&7OOC&8] "
+    emote-prefix: ""
+    chat-format: "%channelprefix%&r%name%&8: &f%message%"
+    range: -1
+    rank-prefixes: true
+    emotes: false
+    quotation-emotes: false
+    cooldown: 0
+  whisper:
+    auto-join: true
+    leave-perm: "whisper.leave"
+    join-perm: "whisper.join"
+    view-perm: "whisper.view"
+    talk-perm: "whisper.talk"
+    nickname: "&8Whisper"
+    aliases:
+    - w
+    channel-prefix: "&8[&7Whisper&8] "
+    emote-prefix: ""
+    chat-format: "%channelprefix%&r%name%&8: &f%message%"
+    range: 3
+    rank-prefixes: false
+    emotes: false
+    quotation-emotes: false
+    cooldown: 0
+  shout:
+    auto-join: true
+    leave-perm: "shout.leave"
+    join-perm: "shout.join"
+    view-perm: "shout.view"
+    talk-perm: "shout.talk"
+    nickname: "Shout"
+    aliases:
+    - s
+    channel-prefix: "&8[&7Shout&8] "
+    emote-prefix: ""
+    chat-format: "%channelprefix%&r%name%&8: &f%message%"
+    range: 48
+    rank-prefixes: false
+    emotes: false
+    quotation-emotes: false
+    cooldown: 0
+races:
+  Human:
+    maxAge: 150
+    color: blue
+bird:
+  blocksPerSecond: 20
+max-countdown: 30
+playerHealth: 20
