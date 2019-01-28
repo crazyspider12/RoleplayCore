@@ -35,7 +35,7 @@ public class BirdCommand implements CommandExecutor {
 								@Override
 								public void run() {
 									if(target.isOnline()) {
-										target.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessages().getString("messages.bird.messageReceived")));
+										target.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessages().getString("messages.bird.messageReceived").replaceAll("%player%", RPUtils.getCharacterName(p))));
 										target.sendMessage(ChatColor.translateAlternateColorCodes('&', finalMessage));
 									} else {
 										if(p.isOnline()) {

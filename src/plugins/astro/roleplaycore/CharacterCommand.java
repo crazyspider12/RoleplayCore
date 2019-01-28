@@ -89,6 +89,7 @@ public class CharacterCommand implements CommandExecutor {
 
 								ResultSet rs = RoleplayCore.queryDB("SELECT Contents,ArmorContents FROM Cards WHERE Player='" + p.getUniqueId().toString() + "' AND Active = 1;");
 								if(rs.next()) {
+									p.getInventory().clear();
 									String contentsString = rs.getString("Contents");
 									String armorContentsString = rs.getString("ArmorContents");
 									if(contentsString != null) {
