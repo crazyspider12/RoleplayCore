@@ -318,6 +318,7 @@ public class RoleplayCore extends JavaPlugin implements Listener {
 			from.sendMessage(ChatColor.translateAlternateColorCodes('&', getMessages().getString("messages.generic.no-permission-to-talk").replaceAll("%channel%", channel.getNickname())));
 			return;
 		}
+		
 		if(channel.getCooldown() > 0 && !from.hasPermission("roleplaycore." + channel.getNickname() + ".cooldown-bypass")) {
 			for(Cooldown c : activeCooldowns) {
 				if(c.getPlayer() == from && c.getChannel() == channel) {
@@ -339,42 +340,48 @@ public class RoleplayCore extends JavaPlugin implements Listener {
 			activeCooldowns.add(new Cooldown(from, channel));
 		}
 
-		try {
-			List<Player> nearby = null;
-			if(channel.getRange() > 0) {
-				List<Player> nearbyPlayers = new ArrayList<Player>();
-				for(Entity e : from.getNearbyEntities(channel.getRange(), channel.getRange(), channel.getRange())) {
-					if(e instanceof Player) {
-						nearbyPlayers.add((Player) e);
+		Bukkit.getScheduler().runTask(this, new Runnable() {
+			@Override
+			public void run() {
+				try {
+					List<Player> nearby = null;
+					if(channel.getRange() > 0) {
+						List<Player> nearbyPlayers = new ArrayList<Player>();
+						for(Entity e : from.getNearbyEntities(channel.getRange(), channel.getRange(), channel.getRange())) {
+							if(e instanceof Player) {
+								nearbyPlayers.add((Player) e);
+							}
+						}
+						nearbyPlayers.add(from);
+						nearby = nearbyPlayers;
+					}
+					List<Player> recipients = new ArrayList<Player>();
+					ResultSet rs = queryDB("SELECT Player,JoinedChannels FROM ChannelData WHERE JoinedChannels LIKE '%" + channel.getNickname() + "%';");
+					while(rs.next()) {
+						if(Arrays.asList(rs.getString("JoinedChannels").split("\\|")).contains(channel.getNickname())) // Just making 100% sure.
+						{
+							OfflinePlayer potentialRecipient = Bukkit.getOfflinePlayer(UUID.fromString(rs.getString("Player")));
+							if(potentialRecipient.isOnline() && (nearby == null || (nearby.contains(potentialRecipient)))) {
+								recipients.add((Player) potentialRecipient);
+							}
+						}
+					}
+
+					for(Player p : Bukkit.getOnlinePlayers()) {
+						if(!recipients.contains(p) && p.hasPermission(channel.getViewPermission()) && (nearby == null || (nearby.contains(p)))) {
+							recipients.add(p);
+						}
+					}
+
+					for(Player recipient : recipients) {
+						message.send(recipient);
 					}
 				}
-				nearbyPlayers.add(from);
-				nearby = nearbyPlayers;
-			}
-			List<Player> recipients = new ArrayList<Player>();
-			ResultSet rs = queryDB("SELECT Player,JoinedChannels FROM ChannelData WHERE JoinedChannels LIKE '%" + channel.getNickname() + "%';");
-			while(rs.next()) {
-				if(Arrays.asList(rs.getString("JoinedChannels").split("\\|")).contains(channel.getNickname())) // Just making 100% sure.
-				{
-					OfflinePlayer potentialRecipient = Bukkit.getOfflinePlayer(UUID.fromString(rs.getString("Player")));
-					if(potentialRecipient.isOnline() && (nearby == null || (nearby.contains(potentialRecipient)))) {
-						recipients.add((Player) potentialRecipient);
-					}
+				catch(SQLException e) {
+					e.printStackTrace();
 				}
 			}
-
-			for(Player p : Bukkit.getOnlinePlayers()) {
-				if(!recipients.contains(p) && p.hasPermission(channel.getViewPermission()) && (nearby == null || (nearby.contains(p)))) {
-					recipients.add(p);
-				}
-			}
-
-			for(Player recipient : recipients) {
-				message.send(recipient);
-			}
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}
+		});
 	}
 
 	public String joinChannel(OfflinePlayer op, Channel channel, boolean forced, boolean setCurrent) {
